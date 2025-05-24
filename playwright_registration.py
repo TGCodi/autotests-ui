@@ -25,5 +25,3 @@ with sync_playwright() as playwright:
     # Проверяем заголовок "Dashboard"
     dashboard_label = page.get_by_test_id('dashboard-toolbar-title-text')
     expect(dashboard_label).to_have_text('Dashboard')
-
-    page.wait_for_timeout(5000)
