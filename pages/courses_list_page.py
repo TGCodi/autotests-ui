@@ -32,11 +32,11 @@ class CoursesListPage(BasePage):
         expect(self.empty_view_icon).to_be_visible()
 
         expect(self.empty_view_title).to_be_visible()
-        expect(self.empty_view_title).to_have_text('there is no results')
+        expect(self.empty_view_title).to_have_text('There is no results')
 
         expect(self.empty_view_description).to_be_visible()
         expect(self.empty_view_description).to_have_text(
-            'results from the load test pipeline will be displayed here'
+            'Results from the load test pipeline will be displayed here'
         )
 
     def check_visible_create_course_button(self):
