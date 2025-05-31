@@ -13,7 +13,7 @@ class RegistrationPage(BasePage):
         self.PASSWORD_INPUT = page.get_by_test_id('registration-form-password-input').locator('input')
         self.REGISTRATION_BUTTON = page.get_by_test_id('registration-page-registration-button')
 
-    def fill_registration_form(self, email: str, username:str, password:str):
+    def fill_registration_form(self, email: str, username:str, password:str):   # Метод для заполения формы регистрации
 
         self.EMAIL_INPUT.fill(email)    # Ввод email
         expect(self.EMAIL_INPUT).to_have_value(email)   # Проверка поля email
