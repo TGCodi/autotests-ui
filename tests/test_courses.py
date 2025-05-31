@@ -27,5 +27,10 @@ def test_empty_courses_list(chromium_page_with_state):
         'Results from the load test pipeline will be displayed here')
 
 
+def test_create_course():
+    pass
+
+
+
 
 
