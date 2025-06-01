@@ -1,6 +1,7 @@
 import pytest
 from playwright.sync_api import Page
 
+from fixtures.browsers import chromium_page_with_state
 from pages.login_page import LoginPage
 from pages.registration_page import RegistrationPage
 from pages.dashboard_page import DashboardPage
@@ -18,8 +19,8 @@ def registration_page(chromium_page: Page) -> RegistrationPage:
 
 
 @pytest.fixture     # Фикстура для инициализации DashboardPage
-def dashboard_page(chromium_page: Page) -> DashboardPage:
-    return DashboardPage(page=chromium_page)
+def dashboard_page(chromium_page_with_state: Page) -> DashboardPage:
+    return DashboardPage(page=chromium_page_with_state)
 
 
 @pytest.fixture     # Фикстура для инициализации CoursesListPage
