@@ -1,5 +1,7 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 
+from components.authentication.registration_form_component import RegistrationFormComponent
+from components.dashboard.dashboard_toolbar_view_component import DashboardToolbarViewComponent
 from pages.base_page import BasePage
 
 
@@ -7,21 +9,10 @@ class RegistrationPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
 
-        # Локаторы
-        self.email_input = page.get_by_test_id('registration-form-email-input').locator('input')
-        self.username_input = page.get_by_test_id('registration-form-username-input').locator('input')
-        self.password_input = page.get_by_test_id('registration-form-password-input').locator('input')
+        self.registration_form = RegistrationFormComponent(page)
+        self.dashboard_tool_bar_view = DashboardToolbarViewComponent(page)
+
         self.registration_button = page.get_by_test_id('registration-page-registration-button')
-
-    def fill_registration_form(self, email: str, username:str, password:str):   # Метод для заполения формы регистрации
-        self.email_input.fill(email)    # Ввод email
-        expect(self.email_input).to_have_value(email)   # Проверка поля email
-
-        self.username_input.fill(username)  # Ввод username
-        expect(self.username_input).to_have_value(username) # Проверка поля username
-
-        self.password_input.fill(password)  # Ввод password
-        expect(self.password_input).to_have_value(password) # Проверка поля password
 
     def click_registration_button(self):    # Клик по кнопке регистрации
         self.registration_button.click()
