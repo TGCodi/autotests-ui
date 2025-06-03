@@ -1,3 +1,5 @@
+import re
+
 from playwright.sync_api import Page
 
 from components.authentication.login_form_component import LoginFormComponent
@@ -21,8 +23,10 @@ class LoginPage(BasePage):
     def click_login_button(self):   # Метод для нажатия на кнопку "Login"
         self.login_button.click()
 
+
     def click_registration_link(self):  # Метод для нажатия на ссылку "Registration"
         self.registration_link.click()
+        self.check_current_url(re.compile(".*/#/auth/registration"))
 
     def check_visible_wrong_email_or_password_alert(self):  # Метод для проверки отображения алерта с ошибкой
         self.wrong_email_or_password_alert.check_visible()
