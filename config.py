@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Self
 
-from pydantic import EmailStr, FilePath, HttpUrl, DirectoryPath, Field, BaseModel
+from pydantic import EmailStr, FilePath, HttpUrl, DirectoryPath, BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,12 +12,16 @@ class Browser(str, Enum):
 
 
 class TestUser(BaseModel):
+    model_config = SettingsConfigDict(env_prefix="TEST_USER")
+
     email: EmailStr
     username: str
     password: str
 
 
 class TestData(BaseModel):
+    model_config = SettingsConfigDict(env_prefix="TEST_DATA")
+
     image_png_file: FilePath
 
 
@@ -35,6 +39,7 @@ class Settings(BaseSettings):
     test_data: TestData
     videos_dir: DirectoryPath
     tracing_dir: DirectoryPath
+    allure_results_dir: DirectoryPath
     browser_state_file: FilePath
 
     def get_base_url(self) -> str:
@@ -44,17 +49,20 @@ class Settings(BaseSettings):
     def initialize(cls) -> Self:
         videos_dir = DirectoryPath("./videos")
         tracing_dir = DirectoryPath("./tracing")
+        allure_results_dir = DirectoryPath("./allure-results")
         browser_state_file = FilePath("browser-state.json")
+
 
 
         videos_dir.mkdir(exist_ok=True)  # Если директория сещуствует, то игнорируем ошибку
         tracing_dir.mkdir(exist_ok=True)
-
+        allure_results_dir.mkdir(exist_ok=True)
         browser_state_file.touch(exist_ok=True)  # Если файл сещуствует, то игнорируем ошибку
 
         return Settings(
             videos_dir=videos_dir,
             tracing_dir=tracing_dir,
+            allure_results_dir=allure_results_dir,
             browser_state_file=browser_state_file
         )
 
