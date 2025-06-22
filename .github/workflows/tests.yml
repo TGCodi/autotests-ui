@@ -1,44 +1,37 @@
-# Имя вашего workflow, которое будет отображаться в интерфейсе GitHub Actions
 name: UI tests
 
-# Указываем, когда будет запускаться данный workflow
 on:
   push:
     branches:
-      - main  # Запускать workflow, когда будет сделан коммит в ветку main
+      - main
   pull_request:
     branches:
-      - main  # Запускать workflow, когда будет сделан pull request в ветку main
+      - main
 
-# Определяем все шаги, которые должны быть выполнены в рамках работы с тестами
 jobs:
   run-tests:
-    runs-on: ubuntu-latest  # Указываем, что тесты будут запускаться на последней версии Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Шаг, который будет клонировать ваш репозиторий на машину GitHub Actions
       - name: Check out repository
-        uses: actions/checkout@v4  # Используем GitHub Action для клонирования репозитория
+        uses: actions/checkout@v4
 
-      # 2. Шаг для установки Python на виртуальной машине
       - name: Set up Python
-        uses: actions/setup-python@v4  # Используем GitHub Action для установки Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.11'  # Устанавливаем версию Python 3.11 (можно заменить на другую версию)
+          python-version: '3.11'
 
-      # 3. Шаг для установки всех зависимостей проекта
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip  # Обновляем pip до последней версии
-          pip install -r requirements.txt  # Устанавливаем зависимости, указанные в requirements.txt
-          playwright install --with-deps  # Устанавливаем браузеры для Playwright (если они не установлены)
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install --with-deps
 
-      # 4. Шаг для запуска тестов с использованием pytest и генерации отчётов Allure
       - name: Run Playwright tests with pytest and generate Allure results
         run: |
-          pytest -m regression --alluredir=allure-results --numprocesses 2  # Запускаем тесты, отмеченные как "regression", генерируем результаты для Allure
+          pytest -m regression --alluredir=allure-results --numprocesses 2
 
-      # 5. Восстанавливаем историю покрытия из кеша
+      # Восстанавливаем историю покрытия из кеша
       - name: Restore Coverage history
         uses: actions/cache/restore@v4
         with:
@@ -47,12 +40,12 @@ jobs:
           restore-keys: |
             coverage-history-
 
-      # 6. Генерируем HTML-отчет и обновляем историю
+      # Генерируем HTML-отчет и обновляем историю
       - name: Generate Coverage report
         run: |
           ui-coverage-tool save-report
 
-      # 7. Сохраняем историю обратно в кеш
+      # Сохраняем историю обратно в кеш
       - name: Cache Coverage  history
         if: always()
         uses: actions/cache/save@v4
@@ -60,7 +53,7 @@ jobs:
           path: coverage-history.json
           key: coverage-history-${{ github.run_id }}
 
-      # 8. Загружаем HTML-отчет как артефакт
+      # Загружаем HTML-отчет как артефакт
       - name: Upload Coverage report
         if: always()
         uses: actions/upload-artifact@v4
@@ -68,13 +61,13 @@ jobs:
           name: coverage-report
           path: coverage.html
 
-      # 9. Сохраняем allure-results как артефакт
-      - name: Upload Allure results as artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Allure results
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: allure-results
           path: allure-results
+
 
   publish-report:
     needs: [ run-tests ]
